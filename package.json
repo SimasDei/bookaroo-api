@@ -1,0 +1,26 @@
+{
+  "name": "bookaroo",
+  "version": "1.0.0",
+  "description": "Mern stack app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/server.js",
+    "server": "nodemon server/server.js"
+  },
+  "engines": {
+    "node": "8.9.5"
+  },
+  "author": "Simas Dei",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.3",
+    "body-parser": "^1.18.3",
+    "concurrently": "^4.1.0",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "moment-js": "^1.1.15",
+    "mongoose": "^5.4.1"
+  }
+}
