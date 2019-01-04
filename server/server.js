@@ -23,6 +23,36 @@ app.use(cookieParser());
 
 // GET Routes
 
+// BOOK
+// single
+app.get('/api/getBook', (req, res) => {
+  let id = req.query.id;
+
+  Book.findById(id, (err, doc) => {
+    if (err) return res.status(400).send(err);
+
+    res.send(doc);
+  });
+});
+
+// All
+// Skip Sort And Order
+// localhost:3001/api/books?skip=0&limit=5&sort=asc
+app.get('/api/books', (req, res) => {
+  let skip = parseInt(req.query.skip);
+  let limit = parseInt(req.query.limit);
+  let order = req.query.order;
+
+  Book.find()
+    .skip(skip)
+    .sort({ _id: order })
+    .limit(limit)
+    .exec((err, doc) => {
+      if (err) return res.status(400).send(err);
+      res.send(doc);
+    });
+});
+
 // POST Routes
 
 // BOOK
