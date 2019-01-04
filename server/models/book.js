@@ -6,16 +6,36 @@ const bookSchema = mongoose.Schema(
       type: String,
       required: true
     },
-    author: { type: String, required: true },
-    review: { type: String, default: 'No Reviews' },
-    pages: { type: String, default: 'Pages not available' },
-    rating: { type: Number, required: true, min: 1, max: 5 },
-    price: { type: String, default: 'Price not available' },
-    ownerId: { type: String, required: true }
+    author: {
+      type: String,
+      required: true
+    },
+    review: {
+      type: String,
+      required: true
+    },
+    pages: {
+      type: String,
+      default: 'Pages not set'
+    },
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+      required: true
+    },
+    price: {
+      type: String,
+      default: 'Price not set'
+    },
+    ownerId: {
+      type: String,
+      required: true
+    }
   },
   { timestamps: true }
 );
 
-const Book = mongoose.Model('Book', bookSchema);
+const Book = mongoose.model('Book', bookSchema);
 
 module.exports = { Book };
