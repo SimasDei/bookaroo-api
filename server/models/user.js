@@ -34,6 +34,42 @@ const userSchema = mongoose.Schema({
   }
 });
 
+userSchema.pre('save', function(next) {
+  let user = this;
+
+  if (user.isModified('password')) {
+    bcrypt.genSalt(SALT, (err, salt) => {
+      if (err) return next(err);
+      bcrypt.hash(user.password, salt, (err, hash) => {
+        if (err) return next(err);
+        user.password = hash;
+        next();
+      });
+    });
+  } else {
+    next();
+  }
+});
+
+userSchema.methods.comparePassword = function(candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+    if (err) return cb(err);
+    cb(null, isMatch);
+  });
+};
+
+userSchema.methods.generateToken = function(cb) {
+  let user = this;
+  let token = jwt.sign(user._id.toHexString(), config.SECRET);
+
+  user.token = token;
+
+  user.save((err, user) => {
+    if (err) return cb(err);
+    cb(null, user);
+  });
+};
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = { User };
