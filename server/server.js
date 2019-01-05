@@ -22,6 +22,9 @@ mongoose.set('useCreateIndex', true);
 const { User } = require('./models/user');
 const { Book } = require('./models/book');
 
+// Authorization Middleware
+const { auth } = require('./middleWare/auth');
+
 // -- BOOK ROUTES -- //
 
 //@Get
@@ -102,6 +105,19 @@ app.listen(port, () => {
 
 // -- USER ROUTES -- //
 
+//@get
+//@Authenticate User or Redirect
+//@localhost:3001/api/auth
+app.get('/api/auth', auth, (req, res) => {
+  res.json({
+    isAuth: true,
+    id: req.user._id,
+    email: req.user.email,
+    name: req.user.name,
+    lastName: req.user.lastName
+  });
+});
+
 //@post
 //@Create a User
 //@localhost:3001/api/register
@@ -149,6 +165,16 @@ app.post('/api/login', (req, res) => {
 });
 
 //@get
+//@Log user Out
+//@localhost:3001/api/logout
+app.get('/api/logout', auth, (req, res) => {
+  req.user.deleteToken(req.token, (err, user) => {
+    if (err) return res.status(400).send(err);
+    res.sendStatus(200);
+  });
+});
+
+//@get
 //@Get Reviewer
 //@localhost:3001/api/getReviewer
 app.get('/api/getReviewer', (req, res) => {
@@ -170,5 +196,15 @@ app.get('/api/users', (req, res) => {
   User.find({}, (err, users) => {
     if (err) return res.status(400).send(err);
     res.status(200).send(users);
+  });
+});
+
+//@get
+//@Get user posts and reviews
+//@localhost:3001/api/user_posts?user=
+app.get('/api/user_posts', (req, res) => {
+  Book.find({ ownerId: req.query.user }).exec((err, doc) => {
+    if (err) return res.status(400).send(err);
+    res.send(doc);
   });
 });

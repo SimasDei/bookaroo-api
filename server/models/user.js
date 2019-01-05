@@ -21,7 +21,7 @@ const userSchema = mongoose.Schema({
     type: String,
     maxLength: 100
   },
-  lastname: {
+  lastName: {
     type: String,
     maxLength: 100
   },
@@ -65,6 +65,29 @@ userSchema.methods.generateToken = function(cb) {
   user.token = token;
 
   user.save((err, user) => {
+    if (err) return cb(err);
+    cb(null, user);
+  });
+};
+
+// Find user by token in cookies
+userSchema.statics.findByToken = function(token, cb) {
+  let user = this;
+
+  jwt.verify(token, config.SECRET, function(err, decode) {
+    // prettier-ignore
+    user.findOne({ "_id": decode, "token": token }, function(err, user) {
+      if (err) return cb(err);
+      cb(null, user);
+    });
+  });
+};
+
+// Delete user token for logout
+userSchema.methods.deleteToken = function(token, cb) {
+  let user = this;
+
+  user.update({ $unset: { token: 1 } }, (err, user) => {
     if (err) return cb(err);
     cb(null, user);
   });
