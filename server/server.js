@@ -29,7 +29,7 @@ const { auth } = require('./middleWare/auth');
 
 //@Get
 //@single
-//@localhost:3001/api/getBook?id=
+//@localhost:5000/api/getBook?id=
 app.get('/api/getBook', (req, res) => {
   let id = req.query.id;
 
@@ -42,7 +42,7 @@ app.get('/api/getBook', (req, res) => {
 
 //@get
 //@All Skip Sort And Order
-//@localhost:3001/api/books?skip=0&limit=5&sort=asc
+//@localhost:5000/api/books?skip=0&limit=5&sort=asc
 app.get('/api/books', (req, res) => {
   let skip = parseInt(req.query.skip);
   let limit = parseInt(req.query.limit);
@@ -60,7 +60,7 @@ app.get('/api/books', (req, res) => {
 
 //@post
 //@New Book
-//@localhost:3001/api/book
+//@localhost:5000/api/book
 app.post('/api/book', (req, res) => {
   const book = new Book(req.body);
   book.save((err, doc) => {
@@ -75,7 +75,7 @@ app.post('/api/book', (req, res) => {
 
 //@post
 //@Update Book
-//@localhost:3001/api/book_update
+//@localhost:5000/api/book_update
 app.post('/api/book_update', (req, res) => {
   Book.findByIdAndUpdate(req.body._id, req.body, { new: true }, (err, doc) => {
     if (err) return res.status(400).send(err);
@@ -88,7 +88,7 @@ app.post('/api/book_update', (req, res) => {
 
 //@Delete
 //@Delete book
-//@localhost:3001/api/delete_book?id=
+//@localhost:5000/api/delete_book?id=
 app.delete('/api/delete_book', (req, res) => {
   let id = req.query.id;
 
@@ -98,16 +98,11 @@ app.delete('/api/delete_book', (req, res) => {
   });
 });
 
-const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log('Server running, Captain o/');
-});
-
 // -- USER ROUTES -- //
 
 //@get
 //@Authenticate User or Redirect
-//@localhost:3001/api/auth
+//@localhost:5000/api/auth
 app.get('/api/auth', auth, (req, res) => {
   res.json({
     isAuth: true,
@@ -120,7 +115,7 @@ app.get('/api/auth', auth, (req, res) => {
 
 //@post
 //@Create a User
-//@localhost:3001/api/register
+//@localhost:5000/api/register
 app.post('/api/register', (req, res) => {
   const user = new User(req.body);
 
@@ -135,7 +130,7 @@ app.post('/api/register', (req, res) => {
 
 //@post
 //@Log User In
-//@localhost:3001/api/login
+//@localhost:5000/api/login
 app.post('/api/login', (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user)
@@ -166,7 +161,7 @@ app.post('/api/login', (req, res) => {
 
 //@get
 //@Log user Out
-//@localhost:3001/api/logout
+//@localhost:5000/api/logout
 app.get('/api/logout', auth, (req, res) => {
   req.user.deleteToken(req.token, (err, user) => {
     if (err) return res.status(400).send(err);
@@ -176,7 +171,7 @@ app.get('/api/logout', auth, (req, res) => {
 
 //@get
 //@Get Reviewer
-//@localhost:3001/api/getReviewer
+//@localhost:5000/api/getReviewer
 app.get('/api/getReviewer', (req, res) => {
   let id = req.query.id;
 
@@ -191,7 +186,7 @@ app.get('/api/getReviewer', (req, res) => {
 
 //@get
 //Get Users
-//@localhost:3001/api/users
+//@localhost:5000/api/users
 app.get('/api/users', (req, res) => {
   User.find({}, (err, users) => {
     if (err) return res.status(400).send(err);
@@ -201,10 +196,15 @@ app.get('/api/users', (req, res) => {
 
 //@get
 //@Get user posts and reviews
-//@localhost:3001/api/user_posts?user=
+//@localhost:5000/api/user_posts?user=
 app.get('/api/user_posts', (req, res) => {
   Book.find({ ownerId: req.query.user }).exec((err, doc) => {
     if (err) return res.status(400).send(err);
     res.send(doc);
   });
+});
+
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
+  console.log('Server running, Captain o/');
 });
