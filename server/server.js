@@ -1,10 +1,14 @@
 const express = require('express');
+const router = express.Router();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const config = require('./config/config').get(process.env.NODE_ENV);
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cookieParser());
 
 mongoose.Promise = global.Promise;
 mongoose.connect(
@@ -17,9 +21,6 @@ mongoose.set('useCreateIndex', true);
 // Import Models
 const { User } = require('./models/user');
 const { Book } = require('./models/book');
-
-app.use(bodyParser.json());
-app.use(cookieParser());
 
 // GET Routes
 
@@ -59,7 +60,7 @@ app.get('/api/books', (req, res) => {
 app.post('/api/book', (req, res) => {
   const book = new Book(req.body);
   book.save((err, doc) => {
-    if (err) return res.status(400).send(err);
+    // if (err) return res.status(400).send(err);
 
     res.status(200).json({
       post: true,
@@ -70,7 +71,28 @@ app.post('/api/book', (req, res) => {
 
 // UPDATE Routes
 
+// BOOK
+app.post('/api/book_update', (req, res) => {
+  Book.findByIdAndUpdate(req.body._id, req.body, { new: true }, (err, doc) => {
+    if (err) return res.status(400).send(err);
+    res.json({
+      success: true,
+      doc
+    });
+  });
+});
+
 // DELETE Routes
+
+// BOOK
+app.delete('/api/delete_book', (req, res) => {
+  let id = req.query.id;
+
+  Book.findByIdAndDelete(id, (err, doc) => {
+    if (err) return res.status(400).send(err);
+    res.json(true);
+  });
+});
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
