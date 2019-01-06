@@ -28,6 +28,11 @@ const bookSchema = mongoose.Schema(
       type: String,
       default: 'Price not set'
     },
+    imageUrl: {
+      type: String,
+      default:
+        'https://read.macmillan.com/wp-content/uploads/2016/04/book-cover-placeholder.png'
+    },
     ownerId: {
       type: String,
       required: true
