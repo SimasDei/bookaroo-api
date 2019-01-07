@@ -132,6 +132,7 @@ app.post('/api/register', (req, res) => {
 //@Log User In
 //@localhost:5000/api/login
 app.post('/api/login', (req, res) => {
+  console.log(req.body.email);
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user)
       return res.json({
