@@ -5,7 +5,7 @@ let auth = (req, res, next) => {
 
   User.findByToken(token, (err, user) => {
     if (err) throw err;
-    if (!user) return res.json({ message: 'No user to Logout' });
+    if (!user) return res.json();
 
     req.token = token;
     req.user = user;
