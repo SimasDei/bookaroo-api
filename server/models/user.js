@@ -5,34 +5,40 @@ const config = require('../config/config').get(process.env.NODE_ENV);
 
 const SALT = 10;
 
-const userSchema = mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: 1
+const userSchema = mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: 1
+    },
+    password: {
+      type: String,
+      required: true,
+      minLength: 4
+    },
+    name: {
+      type: String,
+      maxLength: 100
+    },
+    lastName: {
+      type: String,
+      maxLength: 100
+    },
+    role: {
+      type: Number,
+      default: 0
+    },
+    avatarImg: {
+      type: String
+    },
+    token: {
+      type: String
+    }
   },
-  password: {
-    type: String,
-    required: true,
-    minLength: 4
-  },
-  name: {
-    type: String,
-    maxLength: 100
-  },
-  lastName: {
-    type: String,
-    maxLength: 100
-  },
-  role: {
-    type: Number,
-    default: 0
-  },
-  token: {
-    type: String
-  }
-});
+  { timestamps: true }
+);
 
 userSchema.pre('save', function(next) {
   let user = this;
